@@ -11,8 +11,5 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2"
-  },
-  "devDependencies": {
-    "vercel": "^59.1.4"
   }
 }
