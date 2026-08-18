@@ -37,17 +37,17 @@ export default function RecommendationRevealSection({ recommendation }) {
   }, [recommendation]);
 
   return (
-    <section ref={containerRef} className="py-20 px-4 bg-[#05070a] border-b border-white/5 relative overflow-hidden">
+    <section ref={containerRef} aria-label="AI Recommendation Reveal" className="py-20 px-4 bg-[#05070a] border-b border-white/5 relative overflow-hidden">
       
       {/* Background Glow */}
-      <div className="gradient-glow w-[500px] h-[500px] bg-emerald-600/15 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+      <div className="gradient-glow w-[500px] h-[500px] bg-emerald-600/15 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" aria-hidden="true"></div>
 
       <div className="max-w-5xl mx-auto space-y-10 relative z-10 text-center">
         
         {/* Section Header */}
         <div className="space-y-3 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-mono">
-            <Award className="w-4 h-4 text-emerald-400" />
+            <Award className="w-4 h-4 text-emerald-400" aria-hidden="true" />
             <span>AI RECOMMENDATION REVEAL</span>
           </div>
           <h2 className="text-3xl sm:text-6xl font-black text-white tracking-tight uppercase font-mono">
@@ -65,7 +65,7 @@ export default function RecommendationRevealSection({ recommendation }) {
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-emerald-500/20 pb-6">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300">
-                <Play className="w-6 h-6 fill-emerald-300 ml-0.5" />
+                <Play className="w-6 h-6 fill-emerald-300 ml-0.5" aria-hidden="true" />
               </div>
               <div>
                 <span className="text-xs font-mono font-bold text-emerald-400 uppercase">{rec.category}</span>
@@ -124,17 +124,20 @@ export default function RecommendationRevealSection({ recommendation }) {
           {/* Why Am I Seeing This Expandable Button */}
           <div className="pt-2">
             <button
+              type="button"
               onClick={() => setShowWhy(!showWhy)}
-              className="w-full py-3 px-4 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-300 font-mono text-xs font-bold flex items-center justify-between transition-all"
+              aria-expanded={showWhy}
+              aria-controls="why-am-i-seeing-this-details"
+              className="w-full py-3 px-4 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-300 font-mono text-xs font-bold flex items-center justify-between transition-all focus-visible:ring-2 focus-visible:ring-purple-400"
             >
               <span className="flex items-center gap-2">
-                <HelpCircle className="w-4 h-4 text-cyan-400" /> WHY AM I SEEING THIS RECOMMENDATION?
+                <HelpCircle className="w-4 h-4 text-cyan-400" aria-hidden="true" /> WHY AM I SEEING THIS RECOMMENDATION?
               </span>
-              {showWhy ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              {showWhy ? <ChevronUp className="w-4 h-4" aria-hidden="true" /> : <ChevronDown className="w-4 h-4" aria-hidden="true" />}
             </button>
 
             {showWhy && (
-              <div className="mt-3 p-5 rounded-2xl bg-slate-900/95 border border-purple-500/30 text-xs font-mono text-slate-300 space-y-3 animate-fadeIn">
+              <div id="why-am-i-seeing-this-details" className="mt-3 p-5 rounded-2xl bg-slate-900/95 border border-purple-500/30 text-xs font-mono text-slate-300 space-y-3 animate-fadeIn">
                 <div className="text-cyan-400 font-bold uppercase">EXPLICIT SEMANTIC REASONING:</div>
                 <p className="text-slate-300 leading-relaxed font-sans text-xs">
                   {rec.whyRecommended || "Your interactions across Java memes, sliding window mocks, and PagerDuty debugging show a repeated pattern around programming, software engineering, developer culture, and technology."}
@@ -150,7 +153,7 @@ export default function RecommendationRevealSection({ recommendation }) {
           {/* Scoring Formula Transparency Note */}
           <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs font-mono text-slate-300 space-y-1">
             <div className="flex items-center gap-2 text-purple-400 font-bold text-[11px]">
-              <Layers className="w-3.5 h-3.5" /> TRANSPARENT SCORING MODEL
+              <Layers className="w-3.5 h-3.5" aria-hidden="true" /> TRANSPARENT SCORING MODEL
             </div>
             <p className="text-slate-400 text-[11px]">
               Formula: 35% Interest Match + 20% Semantic Relevance + 15% Educational Value + 10% Career Value + 10% Engagement Potential + 10% Content Quality - Hype Penalty

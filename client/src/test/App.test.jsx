@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import App from '../App.jsx';
 
@@ -45,13 +45,13 @@ describe('TechScroll AI - Full Application Integration Tests', () => {
 
   it('displays the RUN AI REEL ANALYSIS CTA button', () => {
     render(<App />);
-    const runButton = screen.getByRole('button', { name: /RUN AI REEL ANALYSIS/i });
-    expect(runButton).toBeInTheDocument();
+    const runButtons = screen.getAllByRole('button', { name: /Run multi-reel semantic AI analysis/i });
+    expect(runButtons.length).toBeGreaterThan(0);
   });
 
-  it('triggers AI analysis flow when clicking RUN AI REEL ANALYSIS', async () => {
+  it('triggers AI analysis flow when clicking RUN AI REEL ANALYSIS button', async () => {
     render(<App />);
-    const runButton = screen.getByRole('button', { name: /RUN AI REEL ANALYSIS/i });
+    const runButton = screen.getAllByRole('button', { name: /Run multi-reel semantic AI analysis/i })[0];
     fireEvent.click(runButton);
     expect(runButton).toBeInTheDocument();
   });

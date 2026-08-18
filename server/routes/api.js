@@ -3,6 +3,7 @@ import { demoReels } from '../data/demoReels.js';
 import { runFullPipeline } from '../ai/analyzer.js';
 import { inferInterestsFromSignals } from '../ai/interestInference.js';
 import { rankCandidates } from '../ai/recommender.js';
+import { validateAnalyzeInput } from '../middleware/security.js';
 
 const router = Router();
 
@@ -29,10 +30,10 @@ router.get('/demo', async (req, res) => {
   }
 });
 
-// POST /api/analyze - Run AI analysis on provided reels
-router.post('/analyze', async (req, res) => {
+// POST /api/analyze - Run AI analysis on provided reels with security validation
+router.post('/analyze', validateAnalyzeInput, async (req, res) => {
   try {
-    const { reels, provider } = req.body;
+    const { reels, provider } = req.body || {};
     const targetReels = (reels && reels.length > 0) ? reels : demoReels;
     const result = await runFullPipeline(targetReels, provider || "mock");
     res.json(result);
@@ -43,7 +44,7 @@ router.post('/analyze', async (req, res) => {
 
 // POST /api/interests - Return interest cluster graph data
 router.post('/interests', (req, res) => {
-  const { reels } = req.body;
+  const { reels } = req.body || {};
   const graphData = inferInterestsFromSignals(reels || demoReels);
   res.json({ success: true, graph: graphData });
 });

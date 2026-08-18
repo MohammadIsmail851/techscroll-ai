@@ -10,7 +10,7 @@ export default function Navbar({ onRunAnalysis, isAnalyzing, onOpenManual, isJud
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-500 to-cyan-400 p-[1px] shadow-lg shadow-purple-500/20">
             <div className="w-full h-full bg-slate-950 rounded-[11px] flex items-center justify-center">
-              <Cpu className="w-5 h-5 text-cyan-400 animate-pulse" />
+              <Cpu className="w-5 h-5 text-cyan-400 animate-pulse" aria-hidden="true" />
             </div>
           </div>
           <div>
@@ -25,58 +25,66 @@ export default function Navbar({ onRunAnalysis, isAnalyzing, onOpenManual, isJud
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <nav aria-label="Main Action Controls" className="flex items-center gap-2 sm:gap-3">
           
           {/* Provider Badge */}
           <div className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-xs font-mono text-slate-300">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" aria-hidden="true" />
             <span>AI: <strong className="text-emerald-400 font-semibold">{activeProvider}</strong></span>
           </div>
 
           {/* Manual Input Modal Trigger */}
           <button
+            type="button"
             onClick={onOpenManual}
-            className="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 flex items-center gap-1.5 transition-all"
+            aria-label="Open manual reel URL input analyzer"
+            className="px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 flex items-center gap-1.5 transition-all focus-visible:ring-2 focus-visible:ring-cyan-400"
             title="Manual Reel Input"
           >
-            <Sliders className="w-3.5 h-3.5 text-cyan-400" />
+            <Sliders className="w-3.5 h-3.5 text-cyan-400" aria-hidden="true" />
             <span className="hidden sm:inline">Manual Input</span>
           </button>
 
           {/* Judge Mode Toggle */}
           <button
+            type="button"
             onClick={onToggleJudgeMode}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold border flex items-center gap-1.5 transition-all ${
+            aria-pressed={isJudgeMode}
+            aria-label={isJudgeMode ? "Disable Hackathon Judge Mode overlay" : "Enable Hackathon Judge Mode overlay"}
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold border flex items-center gap-1.5 transition-all focus-visible:ring-2 focus-visible:ring-amber-400 ${
               isJudgeMode
                 ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-lg shadow-amber-500/10'
                 : 'bg-slate-900/80 text-slate-300 border-slate-800 hover:border-slate-700'
             }`}
           >
-            <Presentation className="w-3.5 h-3.5 text-amber-400" />
+            <Presentation className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" />
             <span>{isJudgeMode ? 'JUDGE MODE ON' : 'JUDGE MODE'}</span>
           </button>
 
           {/* RUN AI ANALYSIS Button */}
           <button
+            type="button"
             onClick={onRunAnalysis}
             disabled={isAnalyzing}
-            className="relative group px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 text-white font-bold text-xs sm:text-sm tracking-wide shadow-lg shadow-purple-600/30 hover:shadow-purple-600/50 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center gap-2 overflow-hidden"
+            aria-busy={isAnalyzing}
+            aria-label="Run multi-reel semantic AI analysis"
+            className="relative group px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 text-white font-bold text-xs sm:text-sm tracking-wide shadow-lg shadow-purple-600/30 hover:shadow-purple-600/50 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center gap-2 overflow-hidden focus-visible:ring-2 focus-visible:ring-purple-400"
           >
             <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></span>
             {isAnalyzing ? (
               <>
-                <Sparkles className="w-4 h-4 animate-spin text-cyan-300" />
+                <Sparkles className="w-4 h-4 animate-spin text-cyan-300" aria-hidden="true" />
                 <span>ANALYZING...</span>
               </>
             ) : (
               <>
-                <Play className="w-4 h-4 fill-white" />
+                <Play className="w-4 h-4 fill-white" aria-hidden="true" />
                 <span>RUN AI ANALYSIS</span>
               </>
             )}
           </button>
 
-        </div>
+        </nav>
 
       </div>
     </header>

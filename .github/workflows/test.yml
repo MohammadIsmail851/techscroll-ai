@@ -25,8 +25,8 @@ jobs:
           npm install
           npm run postinstall
 
-      - name: Run Test Suites (Client & Server)
-        run: npm test
+      - name: Run Test Suites & Coverage
+        run: npm run test:coverage
 
       - name: Run Frontend Production Build Check
         run: npm run build

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Presentation, X, ArrowRight, CheckCircle2, ChevronRight, ChevronLeft } from 'lucide-react';
 
 const slides = [
@@ -42,31 +42,44 @@ const slides = [
 export default function JudgeModeOverlay({ isOpen, onClose }) {
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Keyboard Esc Listener for Accessibility
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const slide = slides[currentSlide];
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl flex flex-col justify-between p-6 sm:p-12 overflow-y-auto">
+    <div className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl flex flex-col justify-between p-6 sm:p-12 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="judge-mode-title">
       
       {/* Top Bar */}
       <div className="flex items-center justify-between border-b border-slate-800 pb-4">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300">
-            <Presentation className="w-5 h-5" />
+            <Presentation className="w-5 h-5" aria-hidden="true" />
           </div>
           <div>
-            <h2 className="font-extrabold text-lg text-white font-mono">HACKATHON JUDGE PRESENTATION MODE</h2>
+            <h2 id="judge-mode-title" className="font-extrabold text-lg text-white font-mono">HACKATHON JUDGE PRESENTATION MODE</h2>
             <span className="text-xs text-amber-400 font-mono">3-MINUTE PITCH WALKTHROUGH</span>
           </div>
         </div>
 
         <button
+          type="button"
           onClick={onClose}
-          className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-2 border border-slate-700"
+          aria-label="Exit Hackathon Judge Presentation Mode"
+          className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-xs font-semibold flex items-center gap-2 border border-slate-700 focus-visible:ring-2 focus-visible:ring-amber-400"
         >
           <span>Exit Judge Mode</span>
-          <X className="w-4 h-4" />
+          <X className="w-4 h-4" aria-hidden="true" />
         </button>
       </div>
 
@@ -85,15 +98,19 @@ export default function JudgeModeOverlay({ isOpen, onClose }) {
         </div>
 
         {/* Progress Bar */}
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-2" role="tablist" aria-label="Slide Selection">
           {slides.map((_, idx) => (
-            <div
+            <button
+              type="button"
               key={idx}
+              role="tab"
+              aria-selected={idx === currentSlide}
+              aria-label={`Go to slide ${idx + 1}`}
               onClick={() => setCurrentSlide(idx)}
-              className={`h-2 rounded-full cursor-pointer transition-all ${
+              className={`h-2 rounded-full transition-all focus-visible:ring-2 focus-visible:ring-amber-400 ${
                 idx === currentSlide ? 'w-12 bg-amber-400' : 'w-4 bg-slate-800 hover:bg-slate-700'
               }`}
-            ></div>
+            ></button>
           ))}
         </div>
       </div>
@@ -101,11 +118,13 @@ export default function JudgeModeOverlay({ isOpen, onClose }) {
       {/* Slide Navigation Footer */}
       <div className="flex items-center justify-between border-t border-slate-800 pt-4">
         <button
+          type="button"
           onClick={() => setCurrentSlide(prev => Math.max(0, prev - 1))}
           disabled={currentSlide === 0}
-          className="px-5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-mono disabled:opacity-30 flex items-center gap-2"
+          aria-label="Previous slide"
+          className="px-5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-mono disabled:opacity-30 flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-amber-400"
         >
-          <ChevronLeft className="w-4 h-4" /> Previous
+          <ChevronLeft className="w-4 h-4" aria-hidden="true" /> Previous
         </button>
 
         <span className="text-xs font-mono text-slate-400">
@@ -113,11 +132,13 @@ export default function JudgeModeOverlay({ isOpen, onClose }) {
         </span>
 
         <button
+          type="button"
           onClick={() => setCurrentSlide(prev => Math.min(slides.length - 1, prev + 1))}
           disabled={currentSlide === slides.length - 1}
-          className="px-5 py-2.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-mono disabled:opacity-30 flex items-center gap-2"
+          aria-label="Next slide"
+          className="px-5 py-2.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-mono disabled:opacity-30 flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-amber-400"
         >
-          Next Slide <ChevronRight className="w-4 h-4" />
+          Next Slide <ChevronRight className="w-4 h-4" aria-hidden="true" />
         </button>
       </div>
 

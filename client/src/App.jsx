@@ -34,6 +34,7 @@ export default function App() {
   const [analysisId, setAnalysisId] = useState(0); // Version ID incremented on every successful analysis
   const [activeProvider, setActiveProvider] = useState('Local Mock AI');
   const [selectedTopic, setSelectedTopic] = useState(null);
+  const [statusAnnouncement, setStatusAnnouncement] = useState('');
 
   // Initialize Lenis smooth scroll
   useEffect(() => {
@@ -64,19 +65,17 @@ export default function App() {
     loadData();
   }, []);
 
-  // Handler for RUN AI ANALYSIS button (Rapid click protected & triggers popup EVERY time analysis succeeds)
+  // Handler for RUN AI ANALYSIS button
   const handleRunAnalysis = async () => {
-    // 1. Rapid Click Protection: Ignore clicks if an analysis is already running
     if (isAnalyzing) return;
 
     setIsAnalyzing(true);
+    setStatusAnnouncement('Running multi-reel semantic AI analysis...');
     
     setTimeout(async () => {
       try {
-        // Close any existing open popup during active analysis
         setIsPopupOpen(false);
 
-        // Perform analysis with latest reels data
         const res = await runAIAnalysis(reels, 'mock');
         if (!res || res.success === false) {
           throw new Error('Analysis failed');
@@ -84,19 +83,17 @@ export default function App() {
 
         const recData = await fetchRecommendation();
         
-        // Update state with LATEST analysis results
         setPipelineData(res);
         setRecommendationData(recData);
         setAnalysisId(prev => prev + 1);
         setIsAnalyzing(false);
+        setStatusAnnouncement('AI Analysis complete. Recommended Reel updated.');
         
-        // Smooth scroll to recommendation reveal section
         const recElement = document.getElementById('recommendation-reveal');
         if (recElement) {
           recElement.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Trigger intelligent popup modal EVERY TIME an analysis completes successfully
         setTimeout(() => {
           setIsPopupOpen(true);
         }, 500);
@@ -104,7 +101,7 @@ export default function App() {
       } catch (err) {
         console.error('[App] AI Analysis Error:', err.message);
         setIsAnalyzing(false);
-        // Do NOT open popup if analysis fails
+        setStatusAnnouncement('AI Analysis failed. Please try again.');
       }
     }, 3200);
   };
@@ -119,35 +116,26 @@ export default function App() {
   // Handler for selecting adjacent topic
   const handleTopicSelect = (topic) => {
     setSelectedTopic(topic);
-    if (recommendationData && recommendationData.recommendation) {
-      setRecommendationData({
-        ...recommendationData,
-        recommendation: {
-          ...recommendationData.recommendation,
-          title: topic.rec,
-          category: topic.label,
-          interestMatch: topic.score
-        }
-      });
+    const recElement = document.getElementById('recommendation-reveal');
+    if (recElement) {
+      recElement.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  // Handler for feedback submit
-  const handleFeedbackSubmit = (feedback) => {
-    if (feedback.type === 'positive' && recommendationData) {
-      setRecommendationData({
-        ...recommendationData,
-        recommendation: {
-          ...recommendationData.recommendation,
-          interestMatch: Math.min(99, (recommendationData.recommendation.interestMatch || 92) + 3)
-        }
-      });
-    }
+  // Handler for user feedback
+  const handleFeedbackSubmit = (rating, text) => {
+    console.log('[App] User Feedback Received:', { rating, text });
+    setStatusAnnouncement(`Feedback received: ${rating} stars. Thank you!`);
   };
 
   return (
     <div className="min-h-screen bg-[#07090e] text-slate-100 font-sans relative selection:bg-purple-500/30 selection:text-purple-200">
       
+      {/* Screen Reader Live Announcement Region */}
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {statusAnnouncement}
+      </div>
+
       {/* Navigation Header */}
       <Navbar
         onRunAnalysis={handleRunAnalysis}
@@ -158,60 +146,63 @@ export default function App() {
         activeProvider={activeProvider}
       />
 
-      {/* Hero Section */}
-      <HeroSection onRunAnalysis={handleRunAnalysis} />
+      {/* Main Content Landmark */}
+      <main id="main-content" tabIndex="-1" className="focus:outline-none">
+        {/* Hero Section */}
+        <HeroSection onRunAnalysis={handleRunAnalysis} />
 
-      {/* Hero Scroll Transformation (8 REELS -> PATTERNS -> INTEREST -> RECOMMENDATION) */}
-      <HeroScrollTransformation />
+        {/* Hero Scroll Transformation */}
+        <HeroScrollTransformation />
 
-      {/* AI Pipeline 6-Stage Scroll Section */}
-      <AIPipelineSection />
+        {/* AI Pipeline 6-Stage Scroll Section */}
+        <AIPipelineSection />
 
-      {/* 8 Reels Interaction History Deck */}
-      <ReelHistorySection reels={reels} />
+        {/* 8 Reels Interaction History Deck */}
+        <ReelHistorySection reels={reels} />
 
-      {/* Cross-Reel Signal Merger Canvas */}
-      <CrossReelIntelligence />
+        {/* Cross-Reel Signal Merger Canvas */}
+        <CrossReelIntelligence />
 
-      {/* Built-in Trap: Shallow Recommender vs TechScroll AI */}
-      <TraditionalVsTechScroll />
+        {/* Built-in Trap: Shallow Recommender vs TechScroll AI */}
+        <TraditionalVsTechScroll />
 
-      {/* Interest Evolution Timeline */}
-      <InterestEvolutionSection />
+        {/* Interest Evolution Timeline */}
+        <InterestEvolutionSection />
 
-      {/* Entertainment to Learning Bridge */}
-      <EntertainmentToLearningSection />
+        {/* Entertainment to Learning Bridge */}
+        <EntertainmentToLearningSection />
 
-      {/* Interest Profile Spectrum */}
-      <InterestProfileSection />
+        {/* Interest Profile Spectrum */}
+        <InterestProfileSection />
 
-      {/* Interactive Interest Constellation Graph */}
-      <InterestConstellationGraph />
+        {/* Interactive Interest Constellation Graph */}
+        <InterestConstellationGraph />
 
-      {/* Adjacent Interests & Discovery Mode */}
-      <AdjacentInterestsSection
-        onSelectTopic={handleTopicSelect}
-        activeTopicId={selectedTopic?.id}
-      />
+        {/* Adjacent Interests & Discovery Mode */}
+        <AdjacentInterestsSection
+          onSelectTopic={handleTopicSelect}
+          activeTopicId={selectedTopic?.id}
+        />
 
-      {/* Explicit Hype Filter Section */}
-      <HypeFilterSection
-        recommendation={recommendationData?.recommendation}
-        hypeFiltered={recommendationData?.hypeFiltered}
-      />
+        {/* Explicit Hype Filter Section */}
+        <HypeFilterSection
+          recommendation={recommendationData?.recommendation}
+          hypeFiltered={recommendationData?.hypeFiltered}
+        />
 
-      {/* Recommendation Reveal Section */}
-      <div id="recommendation-reveal">
-        <RecommendationRevealSection recommendation={recommendationData?.recommendation} />
-      </div>
+        {/* Recommendation Reveal Section */}
+        <div id="recommendation-reveal">
+          <RecommendationRevealSection recommendation={recommendationData?.recommendation} />
+        </div>
 
-      {/* Decision Tree & Why Section */}
-      <WhyThisReasoningSection formattedOutput={pipelineData?.formattedOutput} />
+        {/* Decision Tree & Why Section */}
+        <WhyThisReasoningSection formattedOutput={pipelineData?.formattedOutput} />
 
-      {/* Continuous Feedback Loop */}
-      <FeedbackLoopSection onFeedbackSubmit={handleFeedbackSubmit} />
+        {/* Continuous Feedback Loop */}
+        <FeedbackLoopSection onFeedbackSubmit={handleFeedbackSubmit} />
+      </main>
 
-      {/* Intelligent Glassmorphism Popup Modal (Appears EVERY TIME an analysis succeeds) */}
+      {/* Intelligent Glassmorphism Popup Modal */}
       <IntelligentPopupModal
         key={`popup-${analysisId}`}
         isOpen={isPopupOpen}

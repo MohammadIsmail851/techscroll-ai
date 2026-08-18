@@ -8,7 +8,8 @@
     "build": "npm run build --prefix client",
     "start": "npm start --prefix server",
     "test": "npm test --prefix client && npm test --prefix server",
-    "test:run": "npm test --prefix client && npm test --prefix server"
+    "test:run": "npm test --prefix client && npm test --prefix server",
+    "test:coverage": "npm run test:coverage --prefix client && npm run test:coverage --prefix server"
   },
   "dependencies": {
     "cors": "^2.8.5",

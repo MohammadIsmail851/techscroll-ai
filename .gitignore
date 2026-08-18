@@ -7,6 +7,10 @@ dist/
 build/
 .output/
 
+# Test Coverage
+coverage/
+*.lcov
+
 # Environment & Secrets
 .env
 .env.local
