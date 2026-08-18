@@ -6,7 +6,9 @@
   "scripts": {
     "postinstall": "npm install --prefix client && npm install --prefix server",
     "build": "npm run build --prefix client",
-    "start": "npm start --prefix server"
+    "start": "npm start --prefix server",
+    "test": "npm test --prefix client && npm test --prefix server",
+    "test:run": "npm test --prefix client && npm test --prefix server"
   },
   "dependencies": {
     "cors": "^2.8.5",

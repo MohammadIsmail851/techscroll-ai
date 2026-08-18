@@ -49,7 +49,7 @@ export async function fetchRecommendation() {
   }
 }
 
-function getFallbackReels() {
+export function getFallbackReels() {
   return [
     {
       id: "reel_01",
@@ -174,7 +174,7 @@ function getFallbackReels() {
   ];
 }
 
-function getFallbackPipelineResult() {
+export function getFallbackPipelineResult() {
   return {
     success: true,
     providerUsed: "Client Fallback AI Engine",
@@ -208,7 +208,7 @@ function getFallbackPipelineResult() {
   };
 }
 
-function getFallbackGraph() {
+export function getFallbackGraph() {
   return {
     primaryInterest: "Software Engineering",
     confidence: 91,
@@ -230,7 +230,7 @@ function getFallbackGraph() {
   };
 }
 
-function getFallbackRecommendationData() {
+export function getFallbackRecommendationData() {
   return {
     success: true,
     recommendation: {

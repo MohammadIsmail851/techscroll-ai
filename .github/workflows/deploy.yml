@@ -27,8 +27,12 @@ jobs:
           cache-dependency-path: client/package-lock.json
 
       - name: Install dependencies
-        working-directory: client
-        run: npm ci
+        run: |
+          npm install
+          npm run postinstall
+
+      - name: Run Test Suites
+        run: npm test
 
       - name: Build frontend
         working-directory: client
